@@ -52,6 +52,13 @@ public class CreatureBattleHandler : MonoBehaviour {
 			
 			GUI.DrawTexture(new Rect(0,0,100,100), playerCreatureHolder.myCreatures[0].image);
 			GUI.DrawTexture(new Rect(Screen.width-100,0,100,100), attackingCreature.image);
+			
+			//Easy way to cheat back to reality (for now)
+			if(GUI.Button(new Rect(Screen.width/2-50, Screen.height-100, 100,50), "Flee")){
+				battling =false;
+				player.inMvmtMode=true;
+				attackingCreature=null;
+			}
 		}
 	}
 }
