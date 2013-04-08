@@ -20,6 +20,8 @@ public class CreatureGenerator {
 		string[] fightBits = {"punch", "munch", "slam", "bam", "wham", "jam", "schism", "tackle", "strike", "pound", "slam", "jab", "bite", "slice",
 			"blast", "kick", "charge", "chomp", "thrust", "blitz", "barrage", "onslaught", "foray", "skirmish", "encroach"};
 		
+		string[] boostBits = {"boost", "help"};
+		
 		//public const int LIGHTNING= 0, GROUND =1, WATER =2, FIRE = 3, GRASS =4, AIR=5, NORMAL=6;
 		string[] groundBits = {"ground", "rock", "earth", "dirt", "mud","grass", "leaf", "vine", "thorn", "branch"};
 		string[] waterBits = {"water", "aqua", "rain", "tsunami", "shower"};

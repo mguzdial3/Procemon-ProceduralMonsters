@@ -34,7 +34,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 						Debug.Log("ATTACKED");
 						battling= true;
 						player.inMvmtMode=false;
-						
+						timeInGrass=0;
 						attackingCreature = creatureHolder.allCreatures[Random.Range(0,creatureHolder.allCreatures.Length)].cloneCreature();
 					}
 				}
