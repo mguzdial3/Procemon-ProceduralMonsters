@@ -122,6 +122,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 					bool didWeCatchIt = Random.Range(chanceToCatch,1.0f)>0.95f;
 					
 					
+					
 					if(didWeCatchIt){
 						displayText = "You caught a "+attackingCreature.name+"!";
 						//Heal and snag the attacking creature
@@ -130,6 +131,9 @@ public class CreatureBattleHandler : MonoBehaviour {
 							attackingCreature.hitPoints = attackingCreature.maxHitPoints;
 							playerCreatureHolder.addCreature(attackingCreature);
 							guiState = FINAL_READOUT;
+							
+							//Actually switching for it
+							CreatureMetrics.alterScore(attackingCreature.ID,CreatureMetrics.INCREMENT_SWITCH);
 						}
 						else{//Figure out what creature we're replacing
 							print("I should be heading to replace creature");
@@ -320,7 +324,10 @@ public class CreatureBattleHandler : MonoBehaviour {
 							GUI.TextArea(new Rect(10+i*(Screen.width/6),(Screen.height/4)+(Screen.width/8), Screen.width/8,Screen.width/4), 
 							"Name: "+creatures[i].name+"\nAttack: "+creatures[i].attack+"\nArmor: "+creatures[i].defense +"\nSpeed: "+creatures[i].speed +"\nSpecial: "+creatures[i].special +"\nType: "+creatures[i].getType()); 
 								
-							
+							//Actually switching for it
+							CreatureMetrics.alterScore(attackingCreature.ID,CreatureMetrics.INCREMENT_SWITCH);
+							CreatureMetrics.alterScore(creatures[i].ID,CreatureMetrics.DECREMENT_SWITCH);
+						
 							if(GUI.Button(new Rect(10+i*(Screen.width/6), (Screen.height/4)-30, Screen.width/8, 30), "Replace")){
 								
 							//Heal the creature FOR NOW and replace
