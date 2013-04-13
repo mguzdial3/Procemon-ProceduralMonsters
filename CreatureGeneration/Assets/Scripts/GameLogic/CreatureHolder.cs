@@ -12,12 +12,17 @@ public class CreatureHolder : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		generator = new CreatureGenerator();
+		//Creature Metrics Reset
+		CreatureMetrics.setup();
 		
+		generator = new CreatureGenerator();
+		//Generate all the creatures
 		allCreatures = generator.generateCreatures();
 		
-		//TESTING: Randomly through creatures at player for now
-		CreatureInfo[] playerCreatures = {allCreatures[Random.Range(0,allCreatures.Length)].cloneCreature(), allCreatures[Random.Range(0,allCreatures.Length)].cloneCreature()};
+		//TESTING: Randomly throw creatures at player for now
+		CreatureInfo[] playerCreatures = {allCreatures[Random.Range(0,allCreatures.Length)].cloneCreature(), allCreatures[Random.Range(0,allCreatures.Length)].cloneCreature(),
+			allCreatures[Random.Range(0,allCreatures.Length)].cloneCreature(), allCreatures[Random.Range(0,allCreatures.Length)].cloneCreature()
+		};
 		playerCreatureHolder.myCreatures = playerCreatures;
 	}
 	

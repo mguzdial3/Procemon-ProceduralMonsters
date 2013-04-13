@@ -46,14 +46,19 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\GameInitialize\CreatureGenerator.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\CreatureImageGenerator.cs" />
+     <Compile Include="Assets\Scripts\GameInitialize\CreatureMetrics.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\CubeSpawner.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureAttack.cs" />
+     <Compile Include="Assets\Scripts\GameLogic\CreatureAttackReplacer.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureBattleHandler.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureHolder.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureImageData.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureInfo.cs" />
+     <Compile Include="Assets\Scripts\GameLogic\CreatureViewer.cs" />
      <Compile Include="Assets\Scripts\Other\CreatureShower.cs" />
      <Compile Include="Assets\Scripts\Other\Cube.cs" />
+     <Compile Include="Assets\Scripts\Other\GiveHealthOnTouch.cs" />
+     <Compile Include="Assets\Scripts\Other\RestartOnTouch.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerCreatureHolder.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
   </ItemGroup>

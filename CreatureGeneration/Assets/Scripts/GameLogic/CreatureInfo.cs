@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class CreatureInfo {
+	//The ID# for this creature, unique for each creature in a generation
+	public int ID;
+	
 	//Name of creature
 	public string name;
 	//Base attack power of creature
@@ -13,7 +16,8 @@ public class CreatureInfo {
 	//Special stat
 	public int special;
 	//Current Hitpoints
-	public int hitPoints=100;
+	public int hitPoints=0;
+	public int maxHitPoints = 100;
 	
 	//Likelihood that a hit will land
 	public float percentAccuracy;
@@ -34,8 +38,11 @@ public class CreatureInfo {
 	
 	public CreatureAttack getFromLevelTwo, getFromLevelFour,getFromLevelFive;
 	
+	//If true, then we get an attack at that level
+	public bool[] getAttackAt = {false, true, false, true, true};
+	
 	//Always start experience at 0
-	float experience = 0;
+	public float experience = 0;
 	
 	
 	//Randomly Generates a CreatureInfo, generating everything but name and image
@@ -62,7 +69,9 @@ public class CreatureInfo {
 	}
 	
 	//Constructor for creature based on passed in info
-	public CreatureInfo(string _name, int _attack, int _speed, int _defense, int _special, int _type, float _percentAccuracy, Texture2D _image, CreatureImageData _data){
+	public CreatureInfo(int _ID, string _name, int _attack, int _speed, int _defense, int _special, int _type, float _percentAccuracy, int _maxHitPoints,  Texture2D _image, CreatureImageData _data){
+		ID = _ID;
+		
 		name = _name;
 		attack = _attack;
 		speed=_speed;
@@ -70,10 +79,13 @@ public class CreatureInfo {
 		defense=_defense;
 		type=_type;
 		percentAccuracy=_percentAccuracy;
+		maxHitPoints =_maxHitPoints;
+		hitPoints=maxHitPoints;
 		
 		image=_image;
 		
 		data =_data;
+		
 	}
 	
 	
@@ -113,7 +125,7 @@ public class CreatureInfo {
 	
 	//Clones Creature (Should ONLY be used on level one creatures, and leveled up appropriately elsewhere
 	public CreatureInfo cloneCreature(){
-		CreatureInfo c =  new CreatureInfo(name, attack,speed,defense,special,type,percentAccuracy,image,data);
+		CreatureInfo c =  new CreatureInfo(ID, name, attack,speed,defense,special,type,percentAccuracy,maxHitPoints, image,data);
 		CreatureAttack[] attacks = {one,two,three,four};
 		
 		CreatureAttack[] levelUps = {getFromLevelTwo, getFromLevelFour, getFromLevelFive};
@@ -122,5 +134,50 @@ public class CreatureInfo {
 		return c;
 	}
 	
+	//Heals the creature, to be called by whatever kind of pokecenter or whatever we have
+	public void healCreature(){
+		hitPoints = maxHitPoints; 
+		
+		one.resetMove();
+		two.resetMove();
+		three.resetMove();
+		four.resetMove();
+	}
 	
+	
+	
+	//Get a random attack
+	public CreatureAttack getAttack(){
+		int attackChoice = Random.Range(1,5);
+		
+		if(attackChoice ==1){
+			return one;
+		}
+		else if(attackChoice ==2){
+			return two;
+		}
+		else if(attackChoice ==3){
+			return three;
+		}
+		else if(attackChoice ==4){
+			return four;
+		}
+		
+		return null;
+	}
+	
+	//Determines if should level up, and returns true if it does level up
+	
+	public bool levelUp(float experienceAmnt){
+		experience+=experienceAmnt;
+		
+		if(experience>Mathf.Pow((level+1),2)*10){
+			level++;
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
 }

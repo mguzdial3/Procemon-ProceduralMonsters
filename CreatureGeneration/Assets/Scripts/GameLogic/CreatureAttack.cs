@@ -38,6 +38,9 @@ public class CreatureAttack{
 	public const int HITPOINTS=0, ATTACK=1, DEFENSE=2, SPEED= 3, SPECIAL =4, ACCURACY = 5;
 	public int statTarget = 0;
 	
+	//Only used within Creature Generator to get the constant terms from
+	public CreatureAttack(){}
+
 	
 	//Constructor to create a new attack (without a secondary attack)
 	public CreatureAttack(string _name, int _attackType, int _elementalType, int _power, float _accuracyOfAttack, int _maxTimes, int _statTarget){
@@ -61,4 +64,36 @@ public class CreatureAttack{
 	}
 	*/
 	
+	
+	//Takes in a interger value and returns the type of stat it refers to
+	//public const int HITPOINTS=0, ATTACK=1, DEFENSE=2, SPEED= 3, SPECIAL =4, ACCURACY = 5;
+	public string getStringForStatType(int statType){
+		CreatureAttack c = new CreatureAttack();
+		
+		switch(statType){
+			case ATTACK:
+				return "attack";
+				break;
+			case DEFENSE:
+				return "defense";
+				break;
+			case SPEED:
+				return "speed";
+				break;
+			case SPECIAL:
+				return "special";
+				break;
+			case ACCURACY:
+				return "accuracy";
+				break;
+		}
+		
+		return "";
+	}
+	
+	
+	//Reset move to what it would be normally
+	public void resetMove(){
+		timesUsed=0;
+	}
 }

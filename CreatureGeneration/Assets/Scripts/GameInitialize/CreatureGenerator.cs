@@ -20,7 +20,8 @@ public class CreatureGenerator {
 		string[] fightBits = {"punch", "munch", "slam", "bam", "wham", "jam", "schism", "tackle", "strike", "pound", "slam", "jab", "bite", "slice",
 			"blast", "kick", "charge", "chomp", "thrust", "blitz", "barrage", "onslaught", "foray", "skirmish", "encroach"};
 		
-		string[] boostBits = {"boost", "help"};
+		string[] boostBits = {"boost", "help", "raise", "expand", "extend", "increase", "aid", "succor", "lift", "cure", "heal"};
+		string[] negativeBits = {"lower", "decrease", "abation", "cut", "shave", "down", "lessen", "harm", "ruin", "vandalize"};
 		
 		//public const int LIGHTNING= 0, GROUND =1, WATER =2, FIRE = 3, GRASS =4, AIR=5, NORMAL=6;
 		string[] groundBits = {"ground", "rock", "earth", "dirt", "mud","grass", "leaf", "vine", "thorn", "branch"};
@@ -57,71 +58,32 @@ public class CreatureGenerator {
 			float percentAccuracy = Random.Range(0.8f,1.0f);
 			
 			
-			CreatureInfo ci = new CreatureInfo(creatureName,attack, speed, defense, special, type, percentAccuracy, imageGenerator.MakeACreature(type), null);
+			//Calculate hitpoints
+			int[] possibleHitPoints = {50, 55, 60, 65};
+			int hitpoints = possibleHitPoints[Random.Range(0, 4)];
+			
+			CreatureInfo ci = new CreatureInfo(i, creatureName,attack, speed, defense, special, type, percentAccuracy,hitpoints, imageGenerator.MakeACreature(type), null);
 
 			
 			
 			//Four Basic Creature Attacks
-			//TODO Fill this out
 			CreatureAttack[] fourBasic = new CreatureAttack[4];
 			
 			for(int f = 0; f<fourBasic.Length; f++){
-			
-				//First, determine what the type of attack will be
-				int attackType = Random.Range(0,3);
-				
-				//Damage type
-				if(attackType==0){
-				}
-				//Boosts my stats type
-				else if(attackType==1){
-					
-				}
-				//Harms your stats type
-				else if(attackType==2){
-					
-				}
-				
-				int fightIndex=0;
-				int fightLength = Random.Range(1,3);
-				
-				string basicAttack = "";
-				
-				while(fightIndex<fightLength){
-					
-					basicAttack+=fightBits[Random.Range(0, fightBits.Length)];
-					
-					fightIndex++;
-				}
-				
+				fourBasic[f] = generateAttack(ci.type, fightBits,elementalBits,boostBits,negativeBits);		
 			}
 			
-			//Four Basic Creature Attacks
+			//Three Level Creature Attacks
 			//TODO Fill this out
 			CreatureAttack[] threeLevelGained = new CreatureAttack[4];
 			
 			for(int f = 0; f<threeLevelGained.Length; f++){
-			
-				int fightIndex=0;
-				int fightLength = Random.Range(1,3);
+				threeLevelGained[f] = generateLevelAttack(ci.type, fightBits,elementalBits,boostBits,negativeBits);
 				
-				string basicAttack = "";
-				
-				while(fightIndex<fightLength){
-					
-					basicAttack+=fightBits[Random.Range(0, fightBits.Length)];
-					
-					fightIndex++;
-				}
 			}
 			
 			
-			
-			
-			
-			
-			
-			
+			ci.setAttacks(fourBasic,threeLevelGained);
 			
 			creatures[i]=ci;
 			
@@ -130,6 +92,291 @@ public class CreatureGenerator {
 		return creatures;
 	}
 	
+	
+	private CreatureAttack generateAttack(int element, string[] fightBits, string[][] elementalBits, string[] boostBits,string[] negativeBits ){
+			//First, determine what the type of attack will be
+				int attackType = Random.Range(-2,3);
+				
+				//Damage type
+				if(attackType<=0){
+					attackType=0;
+					int fightIndex=0;
+					int fightLength = Random.Range(1,3);
+					
+					
+					//NAME OF ATTACK
+					string basicAttack = "";
+					
+					while(fightIndex<fightLength){
+						
+						basicAttack+=fightBits[Random.Range(0, fightBits.Length)];
+						
+						fightIndex++;
+					}
+					
+					basicAttack= (basicAttack[0]).ToString().ToUpper() + basicAttack.Substring(1);
+					
+					
+					//(string _name, int _attackType, int _elementalType, int _power, float _accuracyOfAttack, int _maxTimes, int _statTarget){
+					
+					//Element type for all basic moves is normal
+					int elementalType = 0;
+					
+					//Calculate Power
+					int power = Random.Range(15,36);
+					
+					//Accuracy of attack
+					float accuracy = Random.Range(0.98f,1.0f);
+					
+					//Number of times you can do this
+					int[] possibleNumberOfTimes = {20,25,30, 40, 60};
+					int numberOfTimes = possibleNumberOfTimes[Random.Range(0, possibleNumberOfTimes.Length)];
+					
+					//Stat to target is hitpoints
+					int statsToTarget = 0;
+					
+					return new CreatureAttack(basicAttack,attackType,0,power,accuracy,numberOfTimes,statsToTarget);
+
+					
+					
+				}
+				//Boosts my stats type
+				else if(attackType==1){
+					//Let's pick a type 
+					int statsWerePointingAt = Random.Range(1,6);
+					
+					string nameOfAttack = "";
+					
+					nameOfAttack += getStringGivenType(statsWerePointingAt);
+					
+					int descriptiveWord = Random.Range(0, boostBits.Length);
+					
+					nameOfAttack+= "-"+boostBits[descriptiveWord];
+					
+					//Camel case!
+					nameOfAttack =(nameOfAttack[0]).ToString().ToUpper() + nameOfAttack.Substring(1);
+					
+					
+					//The Amount of stats to boost
+					int statBoostAmnt = 0;
+					
+					//If we're not looking at accuracy
+					if(statsWerePointingAt !=5){
+						statBoostAmnt = Random.Range(1,4);
+					}
+					else{//We're looking at accuracy, needs to be higher
+						statBoostAmnt = Random.Range(3,7);
+						
+					}
+					
+					//Calculate accuracy
+					float accuracyOfAttack = 1.0f;
+					
+					//Calculate number of times you can use the move
+					int[] possibleNumberOfTimes = {10, 15,20,25,30, 40};
+					
+					int numberOfTimes = possibleNumberOfTimes[Random.Range(0, possibleNumberOfTimes.Length)];
+					
+					return new CreatureAttack(nameOfAttack,attackType,0,statBoostAmnt,accuracyOfAttack,numberOfTimes,statsWerePointingAt);
+					
+				}
+				//Harms your stats type
+				else if(attackType==2){
+					//Let's pick a type 
+					int statsWerePointingAt = Random.Range(1,6);
+					
+					string nameOfAttack = "";
+					
+					nameOfAttack += getStringGivenType(statsWerePointingAt);
+					
+					int descriptiveWord = Random.Range(0, negativeBits.Length);
+					
+					nameOfAttack+= "-"+negativeBits[descriptiveWord];
+					
+					//Camel case!
+					nameOfAttack =(nameOfAttack[0]).ToString().ToUpper() + nameOfAttack.Substring(1);
+					
+					
+					//The Amount of stats to hurt
+					int statHurtAmnt = 0;
+					
+					//If we're not looking at accuracy
+					if(statsWerePointingAt !=5){
+						statHurtAmnt = Random.Range(1,4);
+					}
+					else{//We're looking at accuracy, needs to be higher
+						statHurtAmnt = Random.Range(3,7);
+						
+					}
+					
+					
+					//Calculate accuracy
+					float accuracyOfAttack = 1.0f;
+					
+					//Calculate number of times you can use the move
+					int[] possibleNumberOfTimes = {10, 15,20,25,30};
+					
+					int numberOfTimes = possibleNumberOfTimes[Random.Range(0, possibleNumberOfTimes.Length)];
+					
+					return new CreatureAttack(nameOfAttack,attackType,0,statHurtAmnt,accuracyOfAttack,numberOfTimes,(int)statsWerePointingAt);
+				}	
+			return null;
+	}
+	
+	private CreatureAttack generateLevelAttack(int element, string[] fightBits, string[][] elementalBits, string[] boostBits,string[] negativeBits ){
+			//First, determine what the type of attack will be
+				int attackType = Random.Range(-2,3);
+				
+				//Damage type
+				if(attackType<=0){
+					attackType=0;
+					int fightIndex=0;
+					int fightLength = Random.Range(1,3);
+					
+					
+					//NAME OF ATTACK
+					string basicAttack = "";
+					
+					while(fightIndex<fightLength){
+						
+						basicAttack+=fightBits[Random.Range(0, fightBits.Length)];
+						
+						fightIndex++;
+					}
+					
+					basicAttack= (basicAttack[0]).ToString().ToUpper() + basicAttack.Substring(1);
+					
+					
+					
+					//For level up moves, determine if we are using element or not
+			
+					
+					bool usingElement = Random.value>0.5f;
+					int elementalType = 0;
+					if(usingElement){
+						elementalType = element;
+					}
+					
+					//Calculate Power
+					int power = Random.Range(15,36);
+					
+					//Accuracy of attack
+					float accuracy = Random.Range(0.98f,1.0f);
+					
+					//Number of times you can do this
+					int[] possibleNumberOfTimes = {20,25,30, 40, 60};
+			
+					
+			
+					int numberOfTimes = possibleNumberOfTimes[Random.Range(0, possibleNumberOfTimes.Length)];
+					
+					if(usingElement){
+						power += 5;
+						numberOfTimes-=5;
+					}
+			
+			
+					//Stat to target is hitpoints
+					int statsToTarget = 0;
+					
+					return new CreatureAttack(basicAttack,attackType,0,power,accuracy,numberOfTimes,statsToTarget);
+
+					
+					
+				}
+				//Boosts my stats type
+				else if(attackType==1){
+					//Let's pick a type 
+					int statsWerePointingAt = Random.Range(1,6);
+					
+					string nameOfAttack = "";
+					
+					nameOfAttack += getStringGivenType(statsWerePointingAt);
+					
+					int descriptiveWord = Random.Range(0, boostBits.Length);
+					
+					nameOfAttack+= "-"+boostBits[descriptiveWord];
+					
+					//Camel case!
+					nameOfAttack =(nameOfAttack[0]).ToString().ToUpper() + nameOfAttack.Substring(1);
+					
+					
+					//The Amount of stats to boost
+					int statBoostAmnt = 0;
+					
+					//If we're not looking at accuracy
+					if(statsWerePointingAt !=5){
+						statBoostAmnt = Random.Range(3,7);
+					}
+					else{//We're looking at accuracy, needs to be higher
+						statBoostAmnt = Random.Range(5,10);
+						
+					}
+					
+					
+					//Calculate accuracy
+					float accuracyOfAttack = 1.0f;
+					
+					//Calculate number of times you can use the move
+					int[] possibleNumberOfTimes = {10, 15,20,25,30, 40};
+					
+					int numberOfTimes = possibleNumberOfTimes[Random.Range(0, possibleNumberOfTimes.Length)];
+					
+					return new CreatureAttack(nameOfAttack,attackType,0,statBoostAmnt,accuracyOfAttack,numberOfTimes,statsWerePointingAt);
+					
+				}
+				//Harms your stats type
+				else if(attackType==2){
+					//Let's pick a type 
+					int statsWerePointingAt = Random.Range(1,6);
+					
+					string nameOfAttack = "";
+					
+					nameOfAttack += getStringGivenType(statsWerePointingAt);
+					
+					int descriptiveWord = Random.Range(0, negativeBits.Length);
+					
+					nameOfAttack+= "-"+negativeBits[descriptiveWord];
+					
+					//Camel case!
+					nameOfAttack =(nameOfAttack[0]).ToString().ToUpper() + nameOfAttack.Substring(1);
+					
+					
+					//The Amount of stats to hurt
+					int statHurtAmnt = 0;
+					
+					//If we're not looking at accuracy
+					if(statsWerePointingAt !=5){
+						statHurtAmnt = Random.Range(3,7);
+					}
+					else{//We're looking at accuracy, needs to be higher
+						statHurtAmnt = Random.Range(5,10);
+						
+					}
+					
+					
+					//Calculate accuracy
+					float accuracyOfAttack = 1.0f;
+					
+					//Calculate number of times you can use the move
+					int[] possibleNumberOfTimes = {10, 15,20,25,30};
+					
+					int numberOfTimes = possibleNumberOfTimes[Random.Range(0, possibleNumberOfTimes.Length)];
+					
+					return new CreatureAttack(nameOfAttack,attackType,0,statHurtAmnt,accuracyOfAttack,numberOfTimes,(int)statsWerePointingAt);
+				}	
+			return null;
+	}
+	
+	
+	
+	
+	//Pass in an attribute type, get a string out of it
+	public string getStringGivenType(int statType){
+		CreatureAttack c = new CreatureAttack();
+		
+		return c.getStringForStatType(statType);
+	}
 	
 	
 }
