@@ -425,7 +425,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 	//Returns to regular/world gameplay
 	private void returnToGameplay(){
 		player.inMvmtMode=true;
-		guiState=ACTION_DECIDE;\
+		guiState=ACTION_DECIDE;
 		battling=false;
 		
 		resetPlayerModifiers();
