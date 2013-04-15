@@ -27,6 +27,7 @@ public class CreatureMetrics : MonoBehaviour {
 	
 	//Alter the score (value) given a key
 	public static void alterScore(int key, float alteration){
+		//Debug.Log ("Score Altered");
 		//If we don't already have this key, add it
 		if(!creaturePrefs.ContainsKey(key)){
 			creaturePrefs.Add(key, alteration);

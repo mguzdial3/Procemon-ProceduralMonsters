@@ -180,4 +180,17 @@ public class CreatureInfo {
 		}
 		
 	}
+	
+	/* Override the hash code method so it is based off of the id */
+	public override int GetHashCode() {
+        return ID;
+    }
+	
+	/* Override the Equals method so two creatures are equal if they have the same id*/
+    public override bool Equals(object obj) {
+        return Equals(obj as CreatureInfo);
+    }
+    public bool Equals(CreatureInfo obj) {
+        return obj != null && obj.ID == this.ID;
+    }
 }

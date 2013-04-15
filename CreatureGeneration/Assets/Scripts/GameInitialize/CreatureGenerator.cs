@@ -1,5 +1,9 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 //Generates all the creatures, and passes them up to the CreatureHolder
 //THIS IS THE ONE FOR NATHAN TO MESS WITH
@@ -32,6 +36,21 @@ public class CreatureGenerator {
 		
 		string[][] elementalBits = {normalBits, fireBits, waterBits, groundBits, airBits};
 		
+		//Load the creatures from the last run
+		List<SerializableCreature> oldCreatures = null;
+		try
+	    {
+			using (Stream stream = File.Open("data.bin", FileMode.Open))
+			{
+		    	BinaryFormatter bin = new BinaryFormatter();
+		    	oldCreatures = (List<SerializableCreature>)bin.Deserialize(stream);
+			}
+	    }
+	    catch (IOException)
+	    {
+			Debug.LogError("Error loading creatures");
+	    }
+		
 		for(int i = 0; i<creatures.Length; i++){
 			
 			
@@ -47,22 +66,51 @@ public class CreatureGenerator {
 			}
 			
 			
+			//Set up the GA problem
+			StatsProblem problem = new StatsProblem(oldCreatures);
+			GeneticAlgorithm ga = new GeneticAlgorithm(problem);
+			
+			//Run the GA
+			Chromosome result = ga.evaluateProblem(50, 1000, true, 0.8, 0.015, 20);
+			List<Feature> featureSet = result.chromosome;
+			int attack = 0, speed = 0, defense = 0, special = 0, type = 0, hp = 0;
+			float accuracy = 0;
+			foreach(Feature f in result.chromosome)
+			{
+				//Debug.Log (f.label + ": " + f.value);
+				if (f.label.Equals("Attack"))
+					attack = (int) f.value;
+				else if (f.label.Equals("Speed"))
+					speed = (int) f.value;
+				else if (f.label.Equals("Defense"))
+					defense = (int) f.value;
+				else if (f.label.Equals("Special"))
+					special = (int) f.value;
+				else if (f.label.Equals("Accuracy"))
+					accuracy = (int) f.value;
+				else if (f.label.Equals("HP"))
+					hp = (int) f.value;
+				else if (f.label.Equals("Type"))
+					type = (int) f.value;
+			}
+			
+		
 			//All values sum to 10
-			int attack = Random.Range(1,8);
-			int speed = Random.Range(1, 9-attack);
-			int defense = Random.Range(1, 10-attack-speed);
-			int special = Random.Range(1, 11-attack-defense-speed);
+			//int attack = Random.Range(1,8);
+			//int speed = Random.Range(1, 9-attack);
+			//int defense = Random.Range(1, 10-attack-speed);
+			//int special = Random.Range(1, 11-attack-defense-speed);
 			//Type of creature determined randomly
-			int type = Random.Range(0,5);
+			//int type = Random.Range(0,5);
 			//Randomly generate accuracy
-			float percentAccuracy = Random.Range(0.8f,1.0f);
+			//float percentAccuracy = Random.Range(0.8f,1.0f);
 			
 			
 			//Calculate hitpoints
-			int[] possibleHitPoints = {50, 55, 60, 65};
-			int hitpoints = possibleHitPoints[Random.Range(0, 4)];
+			//int[] possibleHitPoints = {50, 55, 60, 65};
+			//int hitpoints = possibleHitPoints[Random.Range(0, 4)];
 			
-			CreatureInfo ci = new CreatureInfo(i, creatureName,attack, speed, defense, special, type, percentAccuracy,hitpoints, imageGenerator.MakeACreature(type), null);
+			CreatureInfo ci = new CreatureInfo(i, creatureName, attack, speed, defense, special, type, accuracy / 10, hp, imageGenerator.MakeACreature(type), null);
 
 			
 			
