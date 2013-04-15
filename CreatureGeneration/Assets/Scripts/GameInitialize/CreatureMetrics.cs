@@ -18,6 +18,7 @@ public class CreatureMetrics : MonoBehaviour {
 	public static float ATTEMPT_TO_CATCH = 0.1f;
 	
 	
+	
 	//Reset the dictionary for this playthrough
 	public static void setup(){
 		creaturePrefs = new Dictionary<int, float>();

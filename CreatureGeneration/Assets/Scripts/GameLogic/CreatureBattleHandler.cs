@@ -326,6 +326,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 								
 							//Actually switching for it
 							CreatureMetrics.alterScore(attackingCreature.ID,CreatureMetrics.INCREMENT_SWITCH);
+						
 							CreatureMetrics.alterScore(creatures[i].ID,CreatureMetrics.DECREMENT_SWITCH);
 						
 							if(GUI.Button(new Rect(10+i*(Screen.width/6), (Screen.height/4)-30, Screen.width/8, 30), "Replace")){
@@ -424,8 +425,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 	//Returns to regular/world gameplay
 	private void returnToGameplay(){
 		player.inMvmtMode=true;
-		guiState=ACTION_DECIDE;
-		attackingCreature=null;
+		guiState=ACTION_DECIDE;\
 		battling=false;
 		
 		resetPlayerModifiers();
