@@ -2,6 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameInitialize/StatsProblem.cs">
     <Files>
+<<<<<<< HEAD
       <File FileName="Assets/Scripts/GameInitialize/GeneticAlgorithm.cs" Line="4" Column="19" />
       <File FileName="Assets/Scripts/Other/RestartOnTouch.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/GameInitialize/SerializableDictionary.cs" Line="1" Column="1" />
@@ -25,6 +26,13 @@
       <File FileName="Assets/Scripts/GameInitialize/Chromosome.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/GameInitialize/GAProblem.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/GameInitialize/StatsProblem.cs" Line="79" Column="21" />
+=======
+      <File FileName="Assets/Scripts/GameLogic/CreatureBattleHandler.cs" Line="428" Column="26" />
+      <File FileName="Assets/Scripts/GameInitialize/CreatureMetrics.cs" Line="20" Column="2" />
+      <File FileName="Assets/Scripts/GameInitialize/CreatureGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureHolder.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/StatsProblem.cs" Line="1" Column="1" />
+>>>>>>> Ignoring a lot of metadata
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
