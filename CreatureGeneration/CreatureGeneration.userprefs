@@ -1,15 +1,32 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameLogic/CreatureBattleHandler.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameInitialize/StatsProblem.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameLogic/CreatureInfo.cs" Line="172" Column="30" />
-      <File FileName="Assets/Scripts/GameLogic/CreatureBattleHandler.cs" Line="329" Column="69" />
+      <File FileName="Assets/Scripts/GameInitialize/GeneticAlgorithm.cs" Line="4" Column="19" />
+      <File FileName="Assets/Scripts/Other/RestartOnTouch.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/SerializableDictionary.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Other/SerializableCreature.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/CreatureImageGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureBattleHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Other/GiveHealthOnTouch.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureHolder.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/CreatureMetrics.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Player/PlayerCreatureHolder.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Other/CreatureShower.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureAttack.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureAttackReplacer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/CreatureGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/CubeSpawner.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureImageData.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameLogic/CreatureViewer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Other/Cube.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/Feature.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/Chromosome.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/GAProblem.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameInitialize/StatsProblem.cs" Line="79" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
->>>>>>> Messed around with Audio a bit.
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

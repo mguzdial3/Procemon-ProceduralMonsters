@@ -51,6 +51,9 @@ public class CreatureGenerator {
 			Debug.LogError("Error loading creatures");
 	    }
 		
+		//Indices in array correspond to the type and the value is the number of that type present
+		int[] creatureTypeCount = new int[5];
+		
 		for(int i = 0; i<creatures.Length; i++){
 			
 			
@@ -67,11 +70,11 @@ public class CreatureGenerator {
 			
 			
 			//Set up the GA problem
-			StatsProblem problem = new StatsProblem(oldCreatures);
+			StatsProblem problem = new StatsProblem(oldCreatures, creatureTypeCount);
 			GeneticAlgorithm ga = new GeneticAlgorithm(problem);
 			
 			//Run the GA
-			Chromosome result = ga.evaluateProblem(50, 1000, true, 0.8, 0.015, 20);
+			Chromosome result = ga.evaluateProblem(50, 1000, true, 0.8, 0.015, 15);
 			List<Feature> featureSet = result.chromosome;
 			int attack = 0, speed = 0, defense = 0, special = 0, type = 0, hp = 0;
 			float accuracy = 0;
@@ -109,6 +112,7 @@ public class CreatureGenerator {
 			//Calculate hitpoints
 			//int[] possibleHitPoints = {50, 55, 60, 65};
 			//int hitpoints = possibleHitPoints[Random.Range(0, 4)];
+			creatureTypeCount[type]++;
 			
 			CreatureInfo ci = new CreatureInfo(i, creatureName, attack, speed, defense, special, type, accuracy / 10, hp, imageGenerator.MakeACreature(type), null);
 
@@ -135,6 +139,10 @@ public class CreatureGenerator {
 			
 			creatures[i]=ci;
 			
+		}
+		for (int k = 0; k < creatureTypeCount.Length; k++)
+		{
+			Debug.Log(creatureTypeCount[k]);	
 		}
 		
 		return creatures;

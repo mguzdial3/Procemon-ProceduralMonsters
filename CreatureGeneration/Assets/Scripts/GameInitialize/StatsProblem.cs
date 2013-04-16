@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,16 +7,22 @@ using System.Text;
     class StatsProblem : GAProblem
     {
         /* Random generator for stats */
-        private Random random;
+        private System.Random random;
 
         /* The maximum value a normal stat can have */
         private const double MAX_STATS_VALUE = 10;
+	
+		/* The index in a chromosome for the type value */
+		private const int TYPE_INDEX = 6;
 
         /* The minimum value a normal stat can have */
         private const double MIN_STATS_VALUE = 1;
 
         /* What the total stats should sum to */
         private const int STAT_SUM = 10;
+	
+		/* The maximum percentage of creatures we will allow for each type */
+		private const double TYPE_LIMIT_PERCENT = 0.4;
 
         /* The factor by which we penalize for the sum of the stats not being equal STAT_SUM*/
         private const int STAT_DISTANCE_PENALTY = 2;
@@ -32,12 +39,19 @@ using System.Text;
 
         /* Creatures we believe the player likes */
         private List<SerializableCreature> likedCreatures;
-
-        public StatsProblem(List<SerializableCreature> creatureList)
+	
+		/* The number of creatures that has been seen for each type */
+		private int[] typeCount;
+	
+		/* The total of the typeCount array */
+		private int typeSum;
+	
+        public StatsProblem(List<SerializableCreature> creatureList, int[] typeCount)
         {
             this.creatureList = creatureList;
-            this.random = new Random();
+            this.random = new System.Random();
             this.testChromosome = createTestChromosome();
+			this.typeCount = typeCount;
             this.likedCreatures = determineCreaturesLike(this.creatureList); //Find the creatures the player liked from the last iteration
             this.desired = desiredCreature(this.likedCreatures);
         }
@@ -63,7 +77,21 @@ using System.Text;
         public double fitness(Chromosome member) //TODO Determine fitness based on input received
         {
             double totalFitness = 1000; //Start fitness
-            
+			//Check to see if each type of creature is present
+			Boolean noneFound = false;
+			for (int j = 0; j < this.typeCount.Length; j++)
+			{
+				if (this.typeCount[j] == 0)
+				{
+					noneFound = true;
+					break;
+				}
+			}
+		
+			//Penalize for trying to add a procemon from a type that is already present when other types are not yet represented
+			if (noneFound && ((int) this.typeCount[(int) member.chromosome.ElementAt(TYPE_INDEX).value]) != 0)
+				totalFitness -= 100;
+		
             //Get the total stat points of the chromosome
             double statsPointSum = 0;
             int typeIndex = 0;
@@ -85,7 +113,9 @@ using System.Text;
             statsPointSum += member.chromosome.ElementAt(typeIndex).value; //Factor in the type to the points scheme again
 
             //Decrease fitness for being far away from past procemon that the player liked
-            double curDistance = creatureDistance(this.desired, member);
+			double curDistance = 0;
+			if (this.desired != null)
+            	curDistance = creatureDistance(this.desired, member);
             totalFitness -= curDistance * STAT_DISTANCE_PENALTY;
             
             if (curDistance <= 3) //We are too close
