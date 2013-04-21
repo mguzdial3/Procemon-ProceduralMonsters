@@ -23,7 +23,7 @@ public class CubeSpawner : MonoBehaviour {
 	}
 	// Use this for initialization
 	int sizeX=40,sizeY=40;
-	patch[,] mapContents=new patch[40,40];
+	patch[,,] mapContents=new patch[9,40,40];
 	private Texture grassTexture,roadTexture,fenceTexture,waterTexture,beachTexture;
 	
 		
@@ -48,26 +48,33 @@ public class CubeSpawner : MonoBehaviour {
 	private void generateMap()
 	{
 		//Grassify everything and Add border
-		createGrass();
+		createGrass(0,0,0);
 		//Pathing
-		createRoad();
+		createRoad(0,12,19);
 		//Watering hole
-		createWater();
+		createWater(0);
+		
+		//Grassify everything and Add border
+		createGrass(1,1,0);
+		//Pathing
+		createRoad(1,12,19);
+		//Watering hole
+		createWater(1);
 	}
-	private void createGrass()
+	private void createGrass(int mapId,int originX,int originY)
 	{
 		for (int y = 0; y < sizeX; y++) {
 			for (int x = 0; x < sizeY; x++) {
 				//GameObject cube=GameObject.CreatePrimitive(PrimitiveType.Cube);
 				//cube.transform.position = new Vector3(x-sizeX/2, y-sizeY/2, 0);
-				GameObject cube = Instantiate(Cube,new Vector3((x-sizeX/2)*13,(y-sizeY/2)*13,0.0f), Cube.transform.rotation) as GameObject;
+				GameObject cube = Instantiate(Cube,new Vector3(originX*sizeX*13+(x-sizeX/2)*13,originY*sizeY*13+(y-sizeY/2)*13,0.0f), Cube.transform.rotation) as GameObject;
 
 				if(x<2 || y<2 || x>sizeX-3 || y>sizeY-3)
 				{
 					//cube.renderer.material.color = Color.red;
 					cube.renderer.material.mainTexture=fenceTexture;
 					cube.tag="Unpassable";
-					mapContents[x,y]=new patch(cube,"fence");
+					mapContents[mapId,x,y]=new patch(cube,"fence");
 				}
 				else
 				{
@@ -77,20 +84,19 @@ public class CubeSpawner : MonoBehaviour {
 					{
 						cube.tag="ContainsCreatures";
 					}
-					mapContents[x,y]=new patch(cube,"grass");
+					mapContents[mapId,x,y]=new patch(cube,"grass");
 				}
 			}
 		}
 	}
-	private void createRoad()
+	private void createRoad(int mapId,int seedX,int seedY)
 	{
 		string[] directions={"up","down","left","right"};
 		string going=directions[0];
 		int count=0;
-		int seedX=12,seedY=19;
 		while(count<280)
 		{
-			createRoadPatch(seedX,seedY);
+			createRoadPatch(mapId,seedX,seedY);
 			if(going=="up")
 			{
 				//createRoadPatch(seedX-1,seedY);
@@ -135,16 +141,16 @@ public class CubeSpawner : MonoBehaviour {
 			return 1;
 		return 0;
 	}
-	private void createRoadPatch(int seedX,int seedY)
+	private void createRoadPatch(int mapId,int seedX,int seedY)
 	{
-		patch p=mapContents[seedX,seedY];
+		patch p=mapContents[mapId,seedX,seedY];
 		paths.Add(new point(seedX,seedY));
 		GameObject cube=p.cube;
 		cube.renderer.material.mainTexture=roadTexture;
 		p.type="road";
 		cube.tag="Road";
 	}
-	private void createWater()
+	private void createWater(int mapId)
 	{
 		int noLakes=Random.Range(2,4);
 		do
@@ -156,10 +162,10 @@ public class CubeSpawner : MonoBehaviour {
 			{
 				int seedX=Random.Range(3,sizeX-3);
 				int seedY=Random.Range(3,sizeY-3);
-				bool canPlace=checkPlacement(seedX,seedY,waterSizeX,waterSizeY);
+				bool canPlace=checkPlacement(mapId,seedX,seedY,waterSizeX,waterSizeY);
 				if(canPlace)
 				{
-					placeWater(seedX,seedY,waterSizeX,waterSizeY);
+					placeWater(mapId,seedX,seedY,waterSizeX,waterSizeY);
 					count=100;
 				}
 				count++;
@@ -167,7 +173,7 @@ public class CubeSpawner : MonoBehaviour {
 			noLakes--;
 		}while(noLakes>0);
 	}
-	private bool checkPlacement(int left,int top,int right,int bottom)
+	private bool checkPlacement(int mapId,int left,int top,int right,int bottom)
 	{
 		right=left+right;
 		bottom=top+bottom;
@@ -175,13 +181,13 @@ public class CubeSpawner : MonoBehaviour {
 		{
 			for(int y=top;y<bottom;y++)
 			{
-				if(mapContents[x,y].type!="grass")
+				if(mapContents[mapId,x,y].type!="grass")
 					return false;
 			}
 		}
 		return true;
 	}
-	private void placeWater(int left,int top,int right,int bottom)
+	private void placeWater(int mapId,int left,int top,int right,int bottom)
 	{
 		right=left+right;
 		bottom=top+bottom;
@@ -191,15 +197,15 @@ public class CubeSpawner : MonoBehaviour {
 			{
 				if(x==left || x==right-1 || y==top || y==bottom-1)
 				{
-					mapContents[x,y].cube.renderer.material.mainTexture=beachTexture;
-					mapContents[x,y].type="beach";
-					mapContents[x,y].cube.tag="Beach";
+					mapContents[mapId,x,y].cube.renderer.material.mainTexture=beachTexture;
+					mapContents[mapId,x,y].type="beach";
+					mapContents[mapId,x,y].cube.tag="Beach";
 				}
 				else
 				{
-					mapContents[x,y].cube.renderer.material.mainTexture=waterTexture;
-					mapContents[x,y].type="water";
-					mapContents[x,y].cube.tag="Unpassable";
+					mapContents[mapId,x,y].cube.renderer.material.mainTexture=waterTexture;
+					mapContents[mapId,x,y].type="water";
+					mapContents[mapId,x,y].cube.tag="Unpassable";
 				}
 			}
 		}

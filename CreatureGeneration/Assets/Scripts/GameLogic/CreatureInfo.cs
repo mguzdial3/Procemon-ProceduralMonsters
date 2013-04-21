@@ -170,15 +170,100 @@ public class CreatureInfo {
 	
 	public bool levelUp(float experienceAmnt){
 		experience+=experienceAmnt;
-		
-		if(experience>Mathf.Pow((level+1),2)*10){
+		//Level 5 is the level cap
+		if(level<5 && experience>Mathf.Pow((level+1),2)*10){
 			level++;
+			attack++;
+			defense++;
+			speed++;
+			if(percentAccuracy<99){
+				percentAccuracy++;
+			}
+			special++;
+			maxHitPoints+=20;
+			hitPoints=maxHitPoints;
+			
 			return true;
 		}
 		else{
 			return false;
 		}
 		
+	}
+	
+	public bool levelUpIgnoreRestrictions(float experienceAmnt){
+		experience+=experienceAmnt;
+		if(experience>Mathf.Pow((level+1),2)*10){
+			Debug.Log("And this five times");
+			 
+			attack++;
+			defense++;
+			speed++;
+			if(percentAccuracy<99){
+				percentAccuracy++;
+			}
+			special++;
+			maxHitPoints+=20;
+			hitPoints=maxHitPoints;
+			
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
+	
+	//Levels up creature to specified level, and chooses attacks randomly
+	public void levelTo(int newLevel){
+		Debug.Log("Level: "+level);
+		while(level<newLevel){
+			level++;
+			Debug.Log("Should see five times: "+level);
+			
+			//Make sure we have proper experience amount
+			experience =Mathf.Pow((level+1),2)*10;
+			
+			//Add basic attributes
+			levelUpIgnoreRestrictions(1.0f);
+			
+			if(level==2 || level==4 || level==5){
+				//Leveling up, you get a new move
+				CreatureAttack newMove=null;
+				
+				if(level==2){
+					newMove =getFromLevelTwo;
+				}
+				else if(level==4){
+					newMove = getFromLevelFour;
+				}
+				else if(level==5){
+					newMove = getFromLevelFive;
+				}
+				
+				//Do we take this new move?
+				int takeMove = Random.Range(0,2);
+				
+				if(takeMove==0){
+					int spotToReplace= Random.Range(0,4);
+					
+					if(spotToReplace==0){
+						one=newMove;
+					}
+					else if(spotToReplace==1){
+						two=newMove;
+					}
+					else if(spotToReplace==2){
+						three=newMove;
+					}
+					else if(spotToReplace==3){
+						four=newMove;
+					}
+				}
+				
+			}
+			
+		}
 	}
 	
 	/* Override the hash code method so it is based off of the id */

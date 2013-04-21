@@ -65,7 +65,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 				if(hit.collider.tag=="ContainsCreatures"){
 					int chanceOfBeingAttacked = Random.Range(0,300-timeInGrass);
 					timeInGrass++;
-					if(chanceOfBeingAttacked ==0 && timeInGrass>10){
+					if(chanceOfBeingAttacked ==0 && timeInGrass>100){
 						timeInGrass=0;
 						
 						
@@ -678,6 +678,16 @@ public class CreatureBattleHandler : MonoBehaviour {
 			}
 			
 		}
+	}
+	
+	public void startBattle(CreatureInfo _attackingCreature){
+		timeInGrass=0;
+		battling= true;
+		player.inMvmtMode=false;
+		attackingCreature = _attackingCreature;
+					
+		//Grab the first creature in the array
+		myCreature = playerCreatureHolder.myCreatures[0];
 	}
 	
 }

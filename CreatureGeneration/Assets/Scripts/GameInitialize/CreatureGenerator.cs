@@ -8,12 +8,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 //Generates all the creatures, and passes them up to the CreatureHolder
 //THIS IS THE ONE FOR NATHAN TO MESS WITH
 public class CreatureGenerator {
-	CreatureImageGenerator imageGenerator;
 	
 	
 	//Presenlty just does it randomly, but that needs to be changes
 	public CreatureInfo[] generateCreatures(){
-		imageGenerator = new CreatureImageGenerator();
 		
 		CreatureInfo[] creatures = new CreatureInfo[60];
 		
@@ -51,6 +49,9 @@ public class CreatureGenerator {
 			Debug.LogError("Error loading creatures");
 	    }
 		
+		//Indices in array correspond to the type and the value is the number of that type present
+		int[] creatureTypeCount = new int[5];
+		
 		for(int i = 0; i<creatures.Length; i++){
 			
 			
@@ -67,11 +68,11 @@ public class CreatureGenerator {
 			
 			
 			//Set up the GA problem
-			StatsProblem problem = new StatsProblem(oldCreatures);
+			StatsProblem problem = new StatsProblem(oldCreatures, creatureTypeCount);
 			GeneticAlgorithm ga = new GeneticAlgorithm(problem);
 			
 			//Run the GA
-			Chromosome result = ga.evaluateProblem(50, 1000, true, 0.8, 0.015, 20);
+			Chromosome result = ga.evaluateProblem(50, 1000, true, 0.8, 0.015, 15);
 			List<Feature> featureSet = result.chromosome;
 			int attack = 0, speed = 0, defense = 0, special = 0, type = 0, hp = 0;
 			float accuracy = 0;
@@ -109,8 +110,9 @@ public class CreatureGenerator {
 			//Calculate hitpoints
 			//int[] possibleHitPoints = {50, 55, 60, 65};
 			//int hitpoints = possibleHitPoints[Random.Range(0, 4)];
-			
-			CreatureInfo ci = new CreatureInfo(i, creatureName, attack, speed, defense, special, type, accuracy / 10, hp, imageGenerator.MakeACreature(type), null);
+			creatureTypeCount[type]++;
+			CreatureImageData data = new CreatureImageData(type);
+			CreatureInfo ci = new CreatureInfo(i, creatureName, attack, speed, defense, special, type, accuracy / 10, hp, data.image, data);
 
 			
 			
@@ -136,8 +138,90 @@ public class CreatureGenerator {
 			creatures[i]=ci;
 			
 		}
+		for (int k = 0; k < creatureTypeCount.Length; k++)
+		{
+			Debug.Log(creatureTypeCount[k]);	
+		}
 		
 		return creatures;
+	}
+	
+	//Creates a boss creature
+	public CreatureInfo generateBossCreature(int type, int level, int ID){
+		string[] bossNameBits = {"big", "boss", "star", "chief", "king", "top", "czar"};
+		string[] nameBits = {"un", "za", "muh", "ga","go","gi","da","do","di","du","fa","fo","fu","la","lo","lu","ma","mu","mi","naom","nurm",
+		"nor","dude","bro","va","vo","vive","mon","bro","wes","gorn","florp","bag","dern","qui","ze","xon", "ley", "durn", "yui"};
+		
+		
+		string[] fightBits = {"punch", "munch", "slam", "bam", "wham", "jam", "schism", "tackle", "strike", "pound", "slam", "jab", "bite", "slice",
+			"blast", "kick", "charge", "chomp", "thrust", "blitz", "barrage", "onslaught", "foray", "skirmish", "encroach"};
+		
+		string[] boostBits = {"boost", "help", "raise", "expand", "extend", "increase", "aid", "succor", "lift", "cure", "heal"};
+		string[] negativeBits = {"lower", "decrease", "abation", "cut", "shave", "down", "lessen", "harm", "ruin", "vandalize"};
+		
+		//public const int LIGHTNING= 0, GROUND =1, WATER =2, FIRE = 3, GRASS =4, AIR=5, NORMAL=6;
+		string[] groundBits = {"ground", "rock", "earth", "dirt", "mud","grass", "leaf", "vine", "thorn", "branch"};
+		string[] waterBits = {"water", "aqua", "rain", "tsunami", "shower"};
+		string[] fireBits = {"fire", "flame", "fiery", "magma", "burn", "lightning", "thunder", "electric", "volt", "magnetic"};
+		string[] airBits = {"air", "wind", "storm", "sky", "zephyr", "gust"};
+		string[] normalBits = {"strong", "cunning", "killer", "death", "average"};
+		string[][] elementalBits = {normalBits, fireBits, waterBits, groundBits, airBits};
+
+		
+		//Make creature Name
+			int nameLength= Random.Range(1,3);
+			int nameIndex = 0;
+			
+			
+			string creatureName = bossNameBits[Random.Range(0, bossNameBits.Length)];
+			while(nameIndex<nameLength){
+				creatureName += nameBits[Random.Range(0, nameBits.Length)];
+				nameIndex++;
+			}
+			
+			
+			//All values sum to 10
+			int attack = Random.Range(1,8);
+			int speed = Random.Range(1, 9-attack);
+			int defense = Random.Range(1, 10-attack-speed);
+			int special = Random.Range(1, 11-attack-defense-speed);
+			//Type of creature determined randomly
+			
+			//Randomly generate accuracy
+			float percentAccuracy = Random.Range(0.8f,1.0f);
+			
+			
+			//Calculate hitpoints
+			int[] possibleHitPoints = {60, 65,70, 75};
+			int hitpoints = possibleHitPoints[Random.Range(0, 4)];
+			CreatureImageData data = new CreatureImageData(type,true);
+			CreatureInfo ci = new CreatureInfo(ID, creatureName, attack, speed, defense, special, type, percentAccuracy , 100, data.image, data);
+
+			
+			
+			//Four Basic Creature Attacks
+			CreatureAttack[] fourBasic = new CreatureAttack[4];
+			
+			for(int f = 0; f<fourBasic.Length; f++){
+				fourBasic[f] = generateAttack(ci.type, fightBits,elementalBits,boostBits,negativeBits);		
+			}
+			
+			//Three Level Creature Attacks
+			//TODO Fill this out
+			CreatureAttack[] threeLevelGained = new CreatureAttack[4];
+			
+			for(int f = 0; f<threeLevelGained.Length; f++){
+				threeLevelGained[f] = generateLevelAttack(ci.type, fightBits,elementalBits,boostBits,negativeBits);
+				
+			}
+			
+			
+			ci.setAttacks(fourBasic,threeLevelGained);
+		
+		
+		ci.levelTo(level);
+		
+		return ci;
 	}
 	
 	
@@ -324,7 +408,7 @@ public class CreatureGenerator {
 					}
 			
 			
-					//Stat to target is hitpoints
+					//Stat to target its hitpoints
 					int statsToTarget = 0;
 					
 					return new CreatureAttack(basicAttack,attackType,0,power,accuracy,numberOfTimes,statsToTarget);
