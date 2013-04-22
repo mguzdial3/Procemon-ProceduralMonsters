@@ -37,10 +37,10 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>/Applications/Unity 4.0/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>H:/Softwares/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>/Applications/Unity 4.0/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>H:/Softwares/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\GameLogic\CreatureTrainer.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureViewer.cs" />
      <Compile Include="Assets\Scripts\GameLogic\LoneCreature.cs" />
+     <Compile Include="Assets\Scripts\GameLogic\TrainerBattleHandler.cs" />
      <Compile Include="Assets\Scripts\Other\CreatureShower.cs" />
      <Compile Include="Assets\Scripts\Other\Cube.cs" />
      <Compile Include="Assets\Scripts\Other\GiveHealthOnTouch.cs" />

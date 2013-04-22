@@ -316,6 +316,12 @@ public class CreatureBattleHandler : MonoBehaviour {
 				//Instructions
 				GUI.TextArea(new Rect(Screen.width/2-150, 0,300,25), "Which Creature to replace for "+attackingCreature.name+"?");
 				
+				//Draw the creature we are potentially replacing with
+				GUI.DrawTexture(new Rect(Screen.width-(Screen.width/6),Screen.height/4, Screen.width/8, Screen.width/8),attackingCreature.image);
+							GUI.TextArea(new Rect(Screen.width-(Screen.width/6),(Screen.height/4)+(Screen.width/8), Screen.width/8,Screen.width/4), 
+							"Name: "+attackingCreature.name+"\nAttack: "+attackingCreature.attack+"\nArmor: "+attackingCreature.defense +"\nSpeed: "+attackingCreature.speed +"\nSpecial: "+attackingCreature.special +"\nType: "+attackingCreature.getType()); 
+							
+				
 				CreatureInfo[] creatures = playerCreatureHolder.myCreatures;
 				
 				for(int i =0; i<creatures.Length; i++){//Go through creatures of player and show each one
@@ -390,8 +396,9 @@ public class CreatureBattleHandler : MonoBehaviour {
 					}
 				}
 				else{
-					//Reload level for now. Later well need to go to the last heal place.
-					Application.LoadLevel(Application.loadedLevelName);
+					//Move it back to the last health spot
+					player.setToOrigPosition();
+					
 					
 				}
 				
@@ -687,7 +694,22 @@ public class CreatureBattleHandler : MonoBehaviour {
 		attackingCreature = _attackingCreature;
 					
 		//Grab the first creature in the array
-		myCreature = playerCreatureHolder.myCreatures[0];
+		if(playerCreatureHolder.myCreatures[0].hitPoints>0){
+			myCreature = playerCreatureHolder.myCreatures[0];
+		}
+		else if(playerCreatureHolder.myCreatures[1]!=null && playerCreatureHolder.myCreatures[1].hitPoints>0){
+			myCreature = playerCreatureHolder.myCreatures[1];
+		}
+		else if(playerCreatureHolder.myCreatures[2]!=null && playerCreatureHolder.myCreatures[2].hitPoints>0){
+			myCreature = playerCreatureHolder.myCreatures[2];
+		}
+		else if(playerCreatureHolder.myCreatures[3]!=null && playerCreatureHolder.myCreatures[3].hitPoints>0){
+			myCreature = playerCreatureHolder.myCreatures[3];
+		}
+		else{
+			player.inMvmtMode=true;
+			player.setToOrigPosition();
+		}
 	}
 	
 }

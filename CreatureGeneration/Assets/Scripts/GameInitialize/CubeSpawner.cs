@@ -80,7 +80,7 @@ public class CubeSpawner : MonoBehaviour {
 				{
 					//cube.renderer.material.color = Color.green;
 					cube.renderer.material.mainTexture=grassTexture;
-					if(Random.value<0.4)
+					//if(Random.value<0.4)
 					{
 						cube.tag="ContainsCreatures";
 					}
