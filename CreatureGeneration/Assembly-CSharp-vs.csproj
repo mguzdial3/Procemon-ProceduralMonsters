@@ -37,16 +37,15 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>/Applications/Unity 4.0/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>/Applications/Unity 4.0/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\GameInitialize\Chromosome.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\CreatureGenerator.cs" />
-     <Compile Include="Assets\Scripts\GameInitialize\CreatureImageGenerator.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\CreatureMetrics.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\CubeSpawner.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\Feature.cs" />
@@ -60,7 +59,9 @@
      <Compile Include="Assets\Scripts\GameLogic\CreatureHolder.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureImageData.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureInfo.cs" />
+     <Compile Include="Assets\Scripts\GameLogic\CreatureTrainer.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureViewer.cs" />
+     <Compile Include="Assets\Scripts\GameLogic\LoneCreature.cs" />
      <Compile Include="Assets\Scripts\Other\CreatureShower.cs" />
      <Compile Include="Assets\Scripts\Other\Cube.cs" />
      <Compile Include="Assets\Scripts\Other\GiveHealthOnTouch.cs" />
