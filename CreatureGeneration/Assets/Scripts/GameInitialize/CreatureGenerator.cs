@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Globalization;
 
 //Generates all the creatures, and passes them up to the CreatureHolder
 //THIS IS THE ONE FOR NATHAN TO MESS WITH
@@ -35,7 +36,29 @@ public class CreatureGenerator {
 		string[][] elementalBits = {normalBits, fireBits, waterBits, groundBits, airBits};
 		
 		//Load the creatures from the last run
-		List<SerializableCreature> oldCreatures = null;
+		List<SerializableCreature> oldCreatures = new List<SerializableCreature>();
+		List<SerializableCreature> oldImages = new List<SerializableCreature>();
+		int numCreatures = PlayerPrefs.GetInt("NumCreaturesSaved");
+		for (int i = 0; i < numCreatures; i++) {
+			Debug.Log("CREATURE LOADED");
+			string temp = PlayerPrefs.GetString("CreatureStats" + i);
+			string[] tempArray=temp.Split("*".ToCharArray());
+			Debug.Log (tempArray[0]);
+			if (tempArray.Length >= 7) {
+				SerializableCreature newCreature = new SerializableCreature(System.Int32.Parse(tempArray[0]), System.Int32.Parse(tempArray[1]), System.Int32.Parse(tempArray[2]), System.Int32.Parse(tempArray[3]), System.Int32.Parse(tempArray[4]), System.Int32.Parse(tempArray[5]), float.Parse(tempArray[6], CultureInfo.InvariantCulture.NumberFormat));
+				oldCreatures.Add(newCreature);	
+			}
+			
+			string temp2 = PlayerPrefs.GetString("CreatureImages" + i);
+			string[] temp2Array = temp2.Split("*".ToCharArray());
+			if (temp2Array.Length >= 4) {
+				int hasEyebrows = (temp2Array[4].Equals("True")) ? 1 : 0; 
+				SerializableCreature newImageCreature = new SerializableCreature(System.Int32.Parse(temp2Array[0]), System.Int32.Parse(temp2Array[1]), System.Int32.Parse(temp2Array[2]), System.Int32.Parse(temp2Array[3]), hasEyebrows);	
+				oldImages.Add(newImageCreature);
+			}
+		}
+		
+		/*List<SerializableCreature> oldCreatures = null;
 		try
 	    {
 			using (Stream stream = File.Open("data.bin", FileMode.Open))
@@ -47,7 +70,7 @@ public class CreatureGenerator {
 	    catch (IOException)
 	    {
 			Debug.LogError("Error loading creatures");
-	    }
+	    }*/
 		
 		//Indices in array correspond to the type and the value is the number of that type present
 		int[] creatureTypeCount = new int[5];
@@ -95,6 +118,29 @@ public class CreatureGenerator {
 					type = (int) f.value;
 			}
 			
+			ImageProblem imageProblem = new ImageProblem(oldImages);
+			GeneticAlgorithm imageGa = new GeneticAlgorithm(imageProblem);
+			
+			int bodySize = 0, headSize = 0, bodyType = 0, headType = 0, hasEyebrows = 0;
+			Chromosome imageResult = imageGa.evaluateProblem(50, 1000, true, 0.8, 0.015, 15);
+			
+			foreach(Feature iRes in imageResult.chromosome)
+			{
+				if (iRes.label.Equals("bodySize"))
+					bodySize = (int) iRes.value;
+				else if (iRes.label.Equals("headSize"))
+					headSize = (int) iRes.value;
+				else if (iRes.label.Equals("bodyType"))
+					bodyType = (int) iRes.value;
+				else if (iRes.label.Equals("headType"))
+					headType = (int) iRes.value;
+				else if (iRes.label.Equals("eyebrows"))
+					hasEyebrows = (int) iRes.value;
+			}
+			
+			bool eyebrowsResult = hasEyebrows == 1;
+			
+			
 		
 			//All values sum to 10
 			//int attack = Random.Range(1,8);
@@ -111,7 +157,7 @@ public class CreatureGenerator {
 			//int[] possibleHitPoints = {50, 55, 60, 65};
 			//int hitpoints = possibleHitPoints[Random.Range(0, 4)];
 			creatureTypeCount[type]++;
-			CreatureImageData data = new CreatureImageData(type);
+			CreatureImageData data = new CreatureImageData(type, bodySize, headSize, bodyType, headType, eyebrowsResult);
 			CreatureInfo ci = new CreatureInfo(i, creatureName, attack, speed, defense, special, type, accuracy / 10, hp, data.image, data);
 
 			

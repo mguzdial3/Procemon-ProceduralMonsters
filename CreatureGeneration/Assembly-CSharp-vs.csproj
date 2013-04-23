@@ -37,10 +37,10 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>/Applications/Unity 4.0/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>/Applications/Unity 4.0/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\GameInitialize\Feature.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\GAProblem.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\GeneticAlgorithm.cs" />
+     <Compile Include="Assets\Scripts\GameInitialize\ImageProblem.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\SerializableDictionary.cs" />
      <Compile Include="Assets\Scripts\GameInitialize\StatsProblem.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureAttack.cs" />

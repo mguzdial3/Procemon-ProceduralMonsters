@@ -13,9 +13,38 @@ public class RestartOnTouch : MonoBehaviour {
 		List<SerializableCreature> creatureList = new List<SerializableCreature>();
 		//Get all the creatures
 		CreatureHolder holder = (CreatureHolder) FindObjectOfType(typeof(CreatureHolder));
-		Debug.Log(holder.allCreatures);
+		//Debug.Log(holder.allCreatures);
 		//Add the dictionary entries to the list
-		foreach(KeyValuePair<int,float> entry in CreatureMetrics.creaturePrefs)
+		int index = 0;
+		string temp = "";
+		string temp2 = "";
+		foreach(KeyValuePair<int, float> entry in CreatureMetrics.creaturePrefs)
+		{
+			temp = "";
+			temp2 = "";
+			if (holder.allCreatures.Length > entry.Key){
+				temp += holder.allCreatures[entry.Key].speed.ToString() + "*";
+				temp += holder.allCreatures[entry.Key].special.ToString() + "*";
+				temp += holder.allCreatures[entry.Key].defense.ToString() + "*";
+				temp += holder.allCreatures[entry.Key].type.ToString() + "*";
+				temp += holder.allCreatures[entry.Key].attack.ToString() + "*";
+				temp += holder.allCreatures[entry.Key].hitPoints.ToString() + "*";
+				temp += entry.Value.ToString();
+				PlayerPrefs.SetString("CreatureStats" + index, temp);
+				
+				temp2 += holder.allCreatures[entry.Key].data.bodySize.ToString() + "*";
+				temp2 += holder.allCreatures[entry.Key].data.headSize.ToString() + "*";
+				temp2 += holder.allCreatures[entry.Key].data.bodyType.ToString() + "*";
+				temp2 += holder.allCreatures[entry.Key].data.headType.ToString() + "*";
+				temp2 += holder.allCreatures[entry.Key].data.hasEyebrows.ToString();
+				PlayerPrefs.SetString("CreatureImages" + index, temp2);
+				
+				index++;
+			}
+		}
+		PlayerPrefs.SetInt("NumCreaturesSaved", index);
+		
+		/*foreach(KeyValuePair<int,float> entry in CreatureMetrics.creaturePrefs)
 		{
 			Debug.Log ("Adding for: " + entry.Key);
 			int speed = holder.allCreatures[entry.Key].speed;
@@ -40,7 +69,7 @@ public class RestartOnTouch : MonoBehaviour {
 	    catch (IOException)
 	    {
 			Debug.LogError("Error writng data to file");
-	    }
+	    }*/
 		
 		
 		
