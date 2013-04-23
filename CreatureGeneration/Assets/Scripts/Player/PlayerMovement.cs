@@ -10,9 +10,17 @@ public class PlayerMovement : MonoBehaviour {
 	public string[] cantMoveToTheseTags;
 	public float width = 1.0f;
 	
+	//Setting up the original position tracking
+	private Vector3 origPos;
+	private bool originalPosSet;
 	
 	// Update is called once per frame
 	void Update () {
+		if(!originalPosSet){
+			origPos=transform.position;
+			originalPosSet=true;
+		}
+		
 		if(inMvmtMode){
 			Vector3 newPos = transform.position;
 			if(Input.GetKey(KeyCode.UpArrow)){
@@ -74,5 +82,13 @@ public class PlayerMovement : MonoBehaviour {
 				
 			}
 		}
+	}
+	//To be called when you heal
+	public void setOrigPosition(){
+		origPos=transform.position;
+	}
+	
+	public void setToOrigPosition(){
+		transform.position = origPos;
 	}
 }

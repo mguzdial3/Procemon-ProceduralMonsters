@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 //Detects when the player should enter a creature battle, and then runs through the battle
-public class CreatureBattleHandler : MonoBehaviour {
+public class TrainerBattleHandler : MonoBehaviour {
 	public PlayerMovement player;
 	public PlayerCreatureHolder playerCreatureHolder;
 	//Attack Replacement Handler
@@ -16,6 +16,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 	CreatureHolder creatureHolder;
 	
 	CreatureInfo myCreature, attackingCreature;
+	CreatureTrainer otherTrainer;
 	
 	private CreatureAttack myAttack, itsAttack;
 	
@@ -55,36 +56,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 	}
 	
 	
-	// Update is called once per frame
-	void Update () {
-		//Find out what player is over when we're in regular movement mode
-		if(!battling && player.inMvmtMode){
-			RaycastHit hit;
-		
-			if(Physics.Raycast(player.transform.position, Vector3.forward, out hit, 10.0f)){
-				if(hit.collider.tag=="ContainsCreatures"){
-					int chanceOfBeingAttacked = Random.Range(0,300-timeInGrass);
-					timeInGrass++;
-					if(chanceOfBeingAttacked ==0 && timeInGrass>100){
-						timeInGrass=0;
-						
-						
-						
-						battling= true;
-						player.inMvmtMode=false;
-						attackingCreature = creatureHolder.allCreatures[Random.Range(0,creatureHolder.allCreatures.Length)].cloneCreature();
-					
-						//Grab the first creature in the array
-						myCreature = playerCreatureHolder.myCreatures[0];
-					
-					}
-				}
-				else{
-					timeInGrass=0;
-				}
-			}
-		}
-	}
+	
 	
 	
 	void OnGUI(){
@@ -115,52 +87,8 @@ public class CreatureBattleHandler : MonoBehaviour {
 					//Switch Procemon
 					guiState = ATTACK_DECIDE;
 				}
-				if(GUI.Button(new Rect(0, 250, 100,50), "Catch")){
-					//Attempt to Catch Procemon
-					float chanceToCatch = ((float)(attackingCreature.maxHitPoints-attackingCreature.hitPoints)/(float)attackingCreature.maxHitPoints);
-					
-					bool didWeCatchIt = Random.Range(chanceToCatch,1.0f)>0.95f;
-					
-					
-					
-					if(didWeCatchIt){
-						displayText = "You caught a "+attackingCreature.name+"!";
-						//Heal and snag the attacking creature
-						
-						if(playerCreatureHolder.myCreatures.Length<4){//If we have room for the creature
-							attackingCreature.hitPoints = attackingCreature.maxHitPoints;
-							playerCreatureHolder.addCreature(attackingCreature);
-							guiState = FINAL_READOUT;
-							
-							//Actually switching for it
-							CreatureMetrics.alterScore(attackingCreature.ID,CreatureMetrics.INCREMENT_SWITCH);
-						}
-						else{//Figure out what creature we're replacing
-							print("I should be heading to replace creature");
-							guiState= REPLACE_CREATURE;
-						}
-						
-						
-						
-					}
-					else{
-						//You failed to get him, now he'll just attack you
-						promptOtherToAttack();
-					}
-					
-					
-					//YOU TRIED TO CATCH A CREATURE, THAT MEANS YOU MUST LIKE IT
-					CreatureMetrics.alterScore(attackingCreature.ID,CreatureMetrics.ATTEMPT_TO_CATCH);
-					
-					
-					
-				}
 				if(GUI.Button(new Rect(0, 300, 100,50), "Switch")){
 					guiState =SWITCH_CREATURE;
-				}
-				if(GUI.Button(new Rect(0, 350, 100,50), "Flee")){
-					//Easy way to cheat back to reality (for now)
-					returnToGameplay();
 				}
 			}
 			else if(guiState == ATTACK_DECIDE){//DETERMINE THE CREATURE'S ATTACK
@@ -260,31 +188,76 @@ public class CreatureBattleHandler : MonoBehaviour {
 							//Calculate experience
 							float experienceGain = attackingCreature.level*20;
 							
+							print("Attacking Creature name: "+attackingCreature.name);
+							
+							
 							//See if we level up (if we do, transfer to level up handler)
-							//TODO; Extend this to encompass other creatures leveling up
 							bool leveledUp = myCreature.levelUp(experienceGain);
 							
+							//Set new attackingCreature
 							
-							//Display that we won
-							if(leveledUp){
-								if(myCreature.getAttackAt[myCreature.level-1]){
-									returnToGameplay();
-									attackReplacement.activate(myCreature);
+							int numNonZero=0;
+							
+							for(int i =0; i<otherTrainer.creatures.Length; i++){
+								if(otherTrainer.creatures[i].hitPoints>0){
+									numNonZero++;
 								}
-								else{
-									displayText =""+myCreature.name+" leveled up!";
-									guiState = FINAL_READOUT;
+							}
+							
+							if(numNonZero>0){
+								//Pick new attacking Creature
+								bool creatureSet = false;
+								while(!creatureSet){
+									CreatureInfo c = otherTrainer.creatures[Random.Range(0,otherTrainer.creatures.Length)];
+									
+									if(c.hitPoints>0){
+										attackingCreature = c;
+										creatureSet = true;
+									}
 								}
 								
+								//Display we leveled or that the switch happened
+								if(leveledUp){
+									if(myCreature.getAttackAt[myCreature.level-1]){
+										returnToGameplay();
+										attackReplacement.activate(myCreature);
+									}
+									else{
+										displayText =""+myCreature.name+" leveled up!";
+										readOutTimer=0.0f;
+										guiState = READOUT;
+									}
+									
+								}
+								else{
+									displayText ="Trainer switched to "+attackingCreature.name+"!";
+									readOutTimer=0.0f;
+								
+									guiState = READOUT;
+								}
 							}
 							else{
-								displayText = "You win!";
-								readOutTimer=0.0f;
-							
-								guiState = FINAL_READOUT;
+								//Display the final bits
+								if(leveledUp){
+									if(myCreature.getAttackAt[myCreature.level-1]){
+										returnToGameplay();
+										attackReplacement.activate(myCreature);
+									}
+									else{
+										displayText =""+myCreature.name+" leveled up!";
+										readOutTimer=0.0f;
+										guiState = FINAL_READOUT;
+									}
+									
+								}
+								else{
+									displayText ="You win!";
+									readOutTimer=0.0f;
+									
+									Destroy(otherTrainer.gameObject);
+									guiState = FINAL_READOUT;
+								}
 							}
-							
-							
 							
 						}
 						else{
@@ -398,9 +371,10 @@ public class CreatureBattleHandler : MonoBehaviour {
 				else{
 					//Move it back to the last health spot
 					player.setToOrigPosition();
-					
+					otherTrainer.backToOriginalPos();
 					
 				}
+				
 				
 				if(myCreature.hitPoints>0){
 					if(GUI.Button(new Rect(Screen.width/2-50,0,100,30), "Back")){
@@ -687,12 +661,14 @@ public class CreatureBattleHandler : MonoBehaviour {
 		}
 	}
 	
-	public void startBattle(CreatureInfo _attackingCreature){
+	public void startBattle(CreatureTrainer _trainer){
 		timeInGrass=0;
 		battling= true;
 		player.inMvmtMode=false;
-		attackingCreature = _attackingCreature;
-					
+		
+		otherTrainer = _trainer;			
+		attackingCreature = otherTrainer.creatures[0];
+		
 		//Grab the first creature in the array
 		if(playerCreatureHolder.myCreatures[0].hitPoints>0){
 			myCreature = playerCreatureHolder.myCreatures[0];
