@@ -6,6 +6,8 @@ public class CreatureImageData {
 	public Texture2D image;
 	
 	
+	public bool hasEyebrows;
+	
 	//Different body sizes
 	public const int BODY_SMALL = 0, BODY_MEDIUM = 1, BODY_LARGE = 2;
 	public int bodySize = 0;
@@ -44,9 +46,9 @@ public class CreatureImageData {
 	public bool hasHorns = false;
 	
 	
-	public CreatureImageData(int type){
+	public CreatureImageData(int type, int bodySize, int headSize, int bodyType, int headType, bool hasEyebrows){
 		//Sets up creature image 
-		image = makeCreatureImage(type);
+		image = makeCreatureImage(type, bodySize, headSize, bodyType, headType, hasEyebrows);
 	}
 	
 	
@@ -319,7 +321,7 @@ public class CreatureImageData {
 	public Texture2D makeCreatureImage(int type, int _bodySize, int _headSize, int _bodyType, int _headType, bool hasEyebrows){
 		Texture2D t = new Texture2D(100,100);
 			
-		
+		this.hasEyebrows = hasEyebrows;
 		
 		//NORMAL, FIRE/LIGHTNING, WATER, GRASS/GROUND, AND AIR
 		Color[] choices = {Color.grey, Color.red, Color.blue,Color.green,Color.white};
