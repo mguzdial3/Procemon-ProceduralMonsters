@@ -26,7 +26,13 @@ public class LoneCreature : MonoBehaviour {
 		special = me.special;
 		
 		renderer.material.SetTexture("_MainTex", me.image);
+		if(battleHandler==null){
+			battleHandler = GameObject.Find("Admin").GetComponent<CreatureBattleHandler>();
+		}
 	}
+	
+	
+	
 	
 	void Update(){
 		if(me.hitPoints<=0){
