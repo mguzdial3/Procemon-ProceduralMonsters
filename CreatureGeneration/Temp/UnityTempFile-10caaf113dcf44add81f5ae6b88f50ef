@@ -45,6 +45,7 @@
 'Assets/Scripts/GameLogic/CreatureInfo.cs'
 'Assets/Scripts/GameLogic/CreatureTrainer.cs'
 'Assets/Scripts/GameLogic/CreatureViewer.cs'
+'Assets/Scripts/GameLogic/GodModeSetter.cs'
 'Assets/Scripts/GameLogic/LoneCreature.cs'
 'Assets/Scripts/GameLogic/TrainerBattleHandler.cs'
 'Assets/Scripts/Other/CreatureShower.cs'

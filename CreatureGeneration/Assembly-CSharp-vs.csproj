@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\GameLogic\CreatureInfo.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureTrainer.cs" />
      <Compile Include="Assets\Scripts\GameLogic\CreatureViewer.cs" />
+     <Compile Include="Assets\Scripts\GameLogic\GodModeSetter.cs" />
      <Compile Include="Assets\Scripts\GameLogic\LoneCreature.cs" />
      <Compile Include="Assets\Scripts\GameLogic\TrainerBattleHandler.cs" />
      <Compile Include="Assets\Scripts\Other\CreatureShower.cs" />

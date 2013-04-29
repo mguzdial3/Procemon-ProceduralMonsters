@@ -123,7 +123,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 					
 					
 					
-					if(didWeCatchIt){
+					if(didWeCatchIt || (PlayerPrefs.GetInt("GodMode")==1)){
 						displayText = "You caught a "+attackingCreature.name+"!";
 						//Heal and snag the attacking creature
 						
@@ -480,8 +480,15 @@ public class CreatureBattleHandler : MonoBehaviour {
 			
 			if(isMe){
 				//You hit!
-				if(valToBeBelow>1.0-(attack.accuracyOfAttack+itsAccuracyModifier)){
-					target.hitPoints -= (attack.power+(myAttackModifier+attacker.attack))/(target.defense+itsDefenseModifier);
+				if((PlayerPrefs.GetInt("GodMode")==1) || valToBeBelow>1.0-(attack.accuracyOfAttack+itsAccuracyModifier)){
+					if((PlayerPrefs.GetInt("GodMode")==1)){
+						target.hitPoints=0;
+					}
+					else{
+						target.hitPoints -= (attack.power+(myAttackModifier+attacker.attack))/(target.defense+itsDefenseModifier);
+					}
+					
+					
 					displayText=(attacker.name +" used "+attack.name+"! It hit!");
 				}
 				else{
@@ -490,7 +497,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 				}
 			}
 			else{
-				//You hit!
+				//They hit
 				if(valToBeBelow>1.0-(attack.accuracyOfAttack+itsAccuracyModifier)){
 					
 					if(target.defense-myDefenseModifier!=0){

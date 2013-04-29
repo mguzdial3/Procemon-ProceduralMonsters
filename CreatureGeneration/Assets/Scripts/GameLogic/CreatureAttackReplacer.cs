@@ -22,8 +22,8 @@ public class CreatureAttackReplacer : MonoBehaviour {
 			GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height), background);
 			
 			GUI.DrawTexture(new Rect(0,0,100,100), creature.image);
-			
-			GUI.TextArea( new Rect(Screen.width/2-100,0,200,25), "Replace what for "+attack.name + "?");
+			GUI.TextArea( new Rect(Screen.width/2-120,0,240,25), "You leveled up and larged a new move!");
+			GUI.TextArea( new Rect(Screen.width/2-120,25,240,25), "Replace what for "+attack.name + "?");
 			
 			if(GUI.Button(new Rect(0,100,100,50), ""+creature.one.name )){
 				creature.one=attack;
