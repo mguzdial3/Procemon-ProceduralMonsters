@@ -27,6 +27,8 @@ public class CreatureInfo {
 	//Yellow, Brown/Green, Blue, Red/Yellow, WHITE, GRAY
 	public const int NORMAL = 0, FIRELIGHTNING =1, WATER = 2, GRASSGROUND = 3, AIR =4;
 	
+	public bool captured;
+	
 	//Image for this creature, to be displayed during battle
 	public Texture2D image;
 	public CreatureImageData data;
@@ -194,7 +196,7 @@ public class CreatureInfo {
 	public bool levelUpIgnoreRestrictions(float experienceAmnt){
 		experience+=experienceAmnt;
 		if(experience>Mathf.Pow((level+1),2)*10){
-			Debug.Log("And this five times");
+			//Debug.Log("And this five times");
 			 
 			attack++;
 			defense++;
@@ -216,10 +218,10 @@ public class CreatureInfo {
 	
 	//Levels up creature to specified level, and chooses attacks randomly
 	public void levelTo(int newLevel){
-		Debug.Log("Level: "+level);
+		//Debug.Log("Level: "+level);
 		while(level<newLevel){
 			level++;
-			Debug.Log("Should see five times: "+level);
+			//Debug.Log("Should see five times: "+level);
 			
 			//Make sure we have proper experience amount
 			experience =Mathf.Pow((level+1),2)*10;

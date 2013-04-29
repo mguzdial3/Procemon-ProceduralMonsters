@@ -313,7 +313,7 @@ public class CreatureGenerator {
 					//Stat to target is hitpoints
 					int statsToTarget = 0;
 					
-					return new CreatureAttack(basicAttack,attackType,0,power,accuracy,numberOfTimes,statsToTarget);
+					return new CreatureAttack(basicAttack,attackType,elementalType,power,accuracy,numberOfTimes,statsToTarget);
 
 					
 					
@@ -403,7 +403,7 @@ public class CreatureGenerator {
 	
 	private CreatureAttack generateLevelAttack(int element, string[] fightBits, string[][] elementalBits, string[] boostBits,string[] negativeBits ){
 			//First, determine what the type of attack will be
-				int attackType = Random.Range(-2,3);
+				int attackType = Random.Range(-5,3);
 				
 				//Damage type
 				if(attackType<=0){
@@ -415,6 +415,11 @@ public class CreatureGenerator {
 					//NAME OF ATTACK
 					string basicAttack = "";
 					
+			
+					int elementalType = element;
+			
+					if(elementalType==0){
+			
 					while(fightIndex<fightLength){
 						
 						basicAttack+=fightBits[Random.Range(0, fightBits.Length)];
@@ -422,18 +427,23 @@ public class CreatureGenerator {
 						fightIndex++;
 					}
 					
+					}
+					else{
+						fightLength=2;
+						basicAttack +=elementalBits[elementalType][Random.Range(0,elementalBits[elementalType].Length)];
+						fightIndex++;
+						
+						while(fightIndex<fightLength){
+							basicAttack+=fightBits[Random.Range(0, fightBits.Length)];
+						
+							fightIndex++;
+						}
+				
+					}
+			
 					basicAttack= (basicAttack[0]).ToString().ToUpper() + basicAttack.Substring(1);
 					
-					
-					
-					//For level up moves, determine if we are using element or not
-			
-					
-					bool usingElement = Random.value>0.5f;
-					int elementalType = 0;
-					if(usingElement){
-						elementalType = element;
-					}
+					//Debug.Log("Elemental type: "+basicAttack);
 					
 					//Calculate Power
 					int power = Random.Range(15,36);
@@ -448,16 +458,15 @@ public class CreatureGenerator {
 			
 					int numberOfTimes = possibleNumberOfTimes[Random.Range(0, possibleNumberOfTimes.Length)];
 					
-					if(usingElement){
-						power += 5;
-						numberOfTimes-=5;
-					}
+					power += Random.Range(5,8);
+					numberOfTimes-=5;
+					
 			
 			
 					//Stat to target its hitpoints
 					int statsToTarget = 0;
 					
-					return new CreatureAttack(basicAttack,attackType,0,power,accuracy,numberOfTimes,statsToTarget);
+					return new CreatureAttack(basicAttack,attackType,elementalType,power,accuracy,numberOfTimes,statsToTarget);
 
 					
 					
@@ -484,10 +493,10 @@ public class CreatureGenerator {
 					
 					//If we're not looking at accuracy
 					if(statsWerePointingAt !=5){
-						statBoostAmnt = Random.Range(3,7);
+						statBoostAmnt = Random.Range(7,14);
 					}
 					else{//We're looking at accuracy, needs to be higher
-						statBoostAmnt = Random.Range(5,10);
+						statBoostAmnt = Random.Range(10,20);
 						
 					}
 					
@@ -525,10 +534,10 @@ public class CreatureGenerator {
 					
 					//If we're not looking at accuracy
 					if(statsWerePointingAt !=5){
-						statHurtAmnt = Random.Range(3,7);
+						statHurtAmnt = Random.Range(7,14);
 					}
 					else{//We're looking at accuracy, needs to be higher
-						statHurtAmnt = Random.Range(5,10);
+						statHurtAmnt = Random.Range(10,20);
 						
 					}
 					

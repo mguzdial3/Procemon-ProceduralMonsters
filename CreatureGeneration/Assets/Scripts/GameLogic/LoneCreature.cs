@@ -35,8 +35,10 @@ public class LoneCreature : MonoBehaviour {
 	
 	
 	void Update(){
-		if(me.hitPoints<=0){
-			Destroy(this);
+		//print("Hit points of loner dude: "+me.hitPoints);
+		if(me.hitPoints<=0 || me.captured){
+			
+			Destroy(gameObject);
 		}
 	}
 	

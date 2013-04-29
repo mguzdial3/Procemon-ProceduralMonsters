@@ -140,7 +140,7 @@ public class CreatureBattleHandler : MonoBehaviour {
 							guiState= REPLACE_CREATURE;
 						}
 						
-						
+						attackingCreature.captured=true;
 						
 					}
 					else{
