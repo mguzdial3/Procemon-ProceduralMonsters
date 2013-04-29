@@ -36,7 +36,8 @@ public class RestartOnTouch : MonoBehaviour {
 				temp2 += holder.allCreatures[entry.Key].data.headSize.ToString() + "*";
 				temp2 += holder.allCreatures[entry.Key].data.bodyType.ToString() + "*";
 				temp2 += holder.allCreatures[entry.Key].data.headType.ToString() + "*";
-				temp2 += holder.allCreatures[entry.Key].data.hasEyebrows.ToString();
+				temp2 += holder.allCreatures[entry.Key].data.hasEyebrows.ToString() + "*";
+				temp2 += entry.Value.ToString();
 				PlayerPrefs.SetString("CreatureImages" + index, temp2);
 				
 				index++;

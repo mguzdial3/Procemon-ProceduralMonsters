@@ -28,13 +28,14 @@ public class SerializableCreature
 		this.score = score;
 	}
 	
-    public SerializableCreature(int bodySize, int headSize, int bodyType, int headType, int hasEyebrows)
+    public SerializableCreature(int bodySize, int headSize, int bodyType, int headType, int hasEyebrows, float score)
     {
         this.bodySize = bodySize;
 		this.headSize = headSize;
 		this.bodyType = bodyType;
 		this.headType = headType;
 		this.hasEyebrows = hasEyebrows;
+		this.score = score;
     }
 }
 

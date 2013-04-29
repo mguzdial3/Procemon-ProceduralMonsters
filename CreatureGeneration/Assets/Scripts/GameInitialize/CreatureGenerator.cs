@@ -40,10 +40,8 @@ public class CreatureGenerator {
 		List<SerializableCreature> oldImages = new List<SerializableCreature>();
 		int numCreatures = PlayerPrefs.GetInt("NumCreaturesSaved");
 		for (int i = 0; i < numCreatures; i++) {
-			Debug.Log("CREATURE LOADED");
 			string temp = PlayerPrefs.GetString("CreatureStats" + i);
 			string[] tempArray=temp.Split("*".ToCharArray());
-			Debug.Log (tempArray[0]);
 			if (tempArray.Length >= 7) {
 				SerializableCreature newCreature = new SerializableCreature(System.Int32.Parse(tempArray[0]), System.Int32.Parse(tempArray[1]), System.Int32.Parse(tempArray[2]), System.Int32.Parse(tempArray[3]), System.Int32.Parse(tempArray[4]), System.Int32.Parse(tempArray[5]), float.Parse(tempArray[6], CultureInfo.InvariantCulture.NumberFormat));
 				oldCreatures.Add(newCreature);	
@@ -51,9 +49,9 @@ public class CreatureGenerator {
 			
 			string temp2 = PlayerPrefs.GetString("CreatureImages" + i);
 			string[] temp2Array = temp2.Split("*".ToCharArray());
-			if (temp2Array.Length >= 4) {
+			if (temp2Array.Length >= 6) {
 				int hasEyebrows = (temp2Array[4].Equals("True")) ? 1 : 0; 
-				SerializableCreature newImageCreature = new SerializableCreature(System.Int32.Parse(temp2Array[0]), System.Int32.Parse(temp2Array[1]), System.Int32.Parse(temp2Array[2]), System.Int32.Parse(temp2Array[3]), hasEyebrows);	
+				SerializableCreature newImageCreature = new SerializableCreature(System.Int32.Parse(temp2Array[0]), System.Int32.Parse(temp2Array[1]), System.Int32.Parse(temp2Array[2]), System.Int32.Parse(temp2Array[3]), hasEyebrows, float.Parse(tempArray[5], CultureInfo.InvariantCulture.NumberFormat));	
 				oldImages.Add(newImageCreature);
 			}
 		}
