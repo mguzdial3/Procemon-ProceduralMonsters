@@ -111,6 +111,7 @@ public class CubeSpawner : MonoBehaviour {
 	public GameObject Cube;
 	public GameObject RestartIcon;
 	ArrayList paths=new ArrayList();
+	point[] mazePositions={new point(0,1),new point(1,0),new point(-1,0),new point(0,-1)};
 	// Use this for initialization
 	void Start () {
 		grassTexture = Resources.Load("grass") as Texture;
@@ -132,10 +133,15 @@ public class CubeSpawner : MonoBehaviour {
 	{
 		//Grassify everything and Add border
 		createGrass(0,0,0);
-		//Pathing
-		createRoad(0,39,35);
-		//Watering hole
+		/*Pathing done later in this function
+		//createRoad(0,39,35);
+		//Watering hole Later
 		createWater(0);
+		//Challenge Everything
+		addTrainers(0,0,0,3);
+		//Heal me
+		addHealthCenters(0,0,0,2);
+		*/
 		/*
 		//Grassify everything and Add border
 		createGrass(1,1,0);
@@ -143,22 +149,46 @@ public class CubeSpawner : MonoBehaviour {
 		createRoad(1,12,19);
 		//Watering hole
 		createWater(1);*/
-		
+		point config=mazePositions[Random.Range(0,4)];
+		int locMazeX=config.x,locMazeY=config.y;
 		MazeGenerator m = new MazeGenerator(sizeX/4, sizeY/4);
-		visualizeMaze(m.maze,1,1,0);
+		visualizeMaze(m.maze,1,locMazeX,locMazeY);
 		//Connect two maps
-		changeCube("grass",0,0,0,39,35);//Absolute values, right now
-		changeCube("grass",0,0,0,39,36);
-		changeCube("grass",1,1,0,0,35);
-		changeCube("grass",1,1,0,0,36);
+		point[] bridge=wallBreaker(locMazeX,locMazeY);
+		for(int i=0;i<4;i++)
+		{
+			if(bridge[i]==null)
+				print ("Error"+i);
+		}
+		changeCube("grass",0,0,0,bridge[0].x,bridge[0].y);//Absolute values, right now
+		changeCube("grass",0,0,0,bridge[1].x,bridge[1].y);
+		changeCube("grass",1,locMazeX,locMazeY,bridge[2].x,bridge[2].y);
+		changeCube("grass",1,locMazeX,locMazeY,bridge[3].x,bridge[3].y);
 		//Block route
-		GameObject legend1 = Instantiate(LoneCreature1,new Vector3(0*sizeX*13+(39-sizeX/2)*13,0*sizeY*13+(35-sizeY/2)*13+5.0f,-13.0f), transform.rotation) as GameObject;
+		GameObject legend1 = Instantiate(LoneCreature1,new Vector3(0*sizeX*13+(bridge[0].x-sizeX/2)*13+5.0f,0*sizeY*13+(bridge[0].y-sizeY/2)*13+5.0f,-13.0f), transform.rotation) as GameObject;
 
 		//Some trainers to make things interesting
-		addTrainers(1,1,0,5);
+		addTrainers(1,locMazeX,locMazeY,5);
 		//End game
-		GameObject completed = Instantiate(RestartIcon,new Vector3(1*sizeX*13+(35-sizeX/2)*13,0*sizeY*13+(5-sizeY/2)*13,-13.0f), RestartIcon.transform.rotation) as GameObject;
-
+		addHealthCenters(1,locMazeX,locMazeY,5);
+		if(config.x==1 || config.y==-1)
+		{
+			GameObject completed = Instantiate(RestartIcon,new Vector3(locMazeX*sizeX*13+(35-sizeX/2)*13,locMazeY*sizeY*13+(5-sizeY/2)*13,-13.0f), RestartIcon.transform.rotation) as GameObject;
+			GameObject legend2 = Instantiate(LoneCreature1,new Vector3(locMazeX*sizeX*13+(37-sizeX/2)*13+5.0f,locMazeY*sizeY*13+(2-sizeY/2)*13+5.0f,-13.0f), transform.rotation) as GameObject;
+		}
+		else
+		{
+			GameObject completed = Instantiate(RestartIcon,new Vector3(locMazeX*sizeX*13+(5-sizeX/2)*13,locMazeY*sizeY*13+(35-sizeY/2)*13,-13.0f), RestartIcon.transform.rotation) as GameObject;
+			GameObject legend2 = Instantiate(LoneCreature1,new Vector3(locMazeX*sizeX*13+(2-sizeX/2)*13+5.0f,locMazeY*sizeY*13+(37-sizeY/2)*13+5.0f,-13.0f), transform.rotation) as GameObject;
+		}
+		//Pathing
+		createRoad(0,bridge[0].x,bridge[0].y,locMazeX,locMazeY);
+		//Watering hole
+		createWater(0);
+		//Challenge Everything
+		addTrainers(0,0,0,3);
+		//Heal me
+		addHealthCenters(0,0,0,2);
 	}
 	private void createGrass(int mapId,int originX,int originY)
 	{
@@ -186,10 +216,14 @@ public class CubeSpawner : MonoBehaviour {
 			}
 		}
 	}
-	private void createRoad(int mapId,int seedX,int seedY)
+	private void createRoad(int mapId,int seedX,int seedY,int dirx,int diry)
 	{
 		string[] directions={"up","down","left","right"};
-		string going=directions[2];//initial direction
+		string going="down";//initial direction
+		if(dirx==-1)going="right";
+		else if(dirx==1)going="left";
+		else if(diry==1)going="up";
+		else if(diry==-1)going="down";
 		int count=0;
 		while(count<280)
 		{
@@ -408,16 +442,73 @@ public class CubeSpawner : MonoBehaviour {
 			trainer1.GetComponent<CreatureTrainer>().setup(5,3,2,0);//All trainers are the same!
 		}
 	}
+	public GameObject healthCenter;
+	private void addHealthCenters(int mapId,int originX,int originY,int noCenters)
+	{
+		while(noCenters>0)
+		{
+			noCenters--;
+			int x=0,y=0;
+			do
+			{
+				x=Random.Range(5,35);
+				y=Random.Range(5,35);
+			}while(!clearPosition(mapId,x,y));
+			
+			GameObject health1 = (GameObject) Instantiate(healthCenter, new Vector3(originX*sizeX*13+(x-sizeX/2)*13,originY*sizeY*13+(y-sizeY/2)*13,-13.0f), transform.rotation);
+		}
+	}
 	bool clearPosition(int mapId,int x,int y)
 	{
 		for(int i=x-1;i<x+2;i++)
 		{
 			for(int j=y-1;j<y+2;j++)
 			{
-				if(mapContents[mapId,x,y].type!="grass")
+				if(mapContents[mapId,i,j].type!="grass")
 					return false;
 			}
 		}
 		return true;
+	}
+	point[] wallBreaker(int locMazeX,int locMazeY)
+	{
+		point[] toret=new point[4];
+		if(locMazeX==1 && locMazeY==0)
+		{
+			int change=Random.Range(5,35);
+			int change1=change+1;
+			toret[0]=new point(39,change);
+			toret[1]=new point(39,change1);
+			toret[2]=new point(0,change);
+			toret[3]=new point(0,change1);
+		}
+		if(locMazeX==0 && locMazeY==1)
+		{
+			int change=Random.Range(5,35);
+			int change1=change+1;
+			toret[0]=new point(change,39);
+			toret[1]=new point(change1,39);
+			toret[2]=new point(change,0);
+			toret[3]=new point(change1,0);
+		}
+		if(locMazeX==-1 && locMazeY==0)
+		{
+			int change=Random.Range(5,35);
+			int change1=change+1;
+			toret[0]=new point(0,change);
+			toret[1]=new point(0,change1);
+			toret[2]=new point(39,change);
+			toret[3]=new point(39,change1);
+		}
+		if(locMazeX==0 && locMazeY==-1)
+		{
+			int change=Random.Range(5,35);
+			int change1=change+1;
+			toret[0]=new point(change,0);
+			toret[1]=new point(change1,0);
+			toret[2]=new point(change,39);
+			toret[3]=new point(change1,39);
+		}
+		return toret;
 	}
 }
