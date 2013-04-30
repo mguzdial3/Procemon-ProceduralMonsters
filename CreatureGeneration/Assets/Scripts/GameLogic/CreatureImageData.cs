@@ -71,7 +71,11 @@ public class CreatureImageData {
 	public Texture2D makeCreatureImage(int type){
 		Texture2D t = new Texture2D(100,100);
 			
-		
+		for(int x = 0; x<100; x++){
+			for(int y = 0; y<100; y++){
+				t.SetPixel(x,y,Color.clear);
+			}
+		}
 		
 		//NORMAL, FIRE/LIGHTNING, WATER, GRASS/GROUND, AND AIR
 		Color[] choices = {Color.grey, Color.red, Color.blue,Color.green,Color.white};
@@ -321,6 +325,12 @@ public class CreatureImageData {
 	public Texture2D makeCreatureImage(int type, int _bodySize, int _headSize, int _bodyType, int _headType, bool hasEyebrows){
 		Texture2D t = new Texture2D(100,100);
 			
+		for(int x = 0; x<100; x++){
+			for(int y = 0; y<100; y++){
+				t.SetPixel(x,y,Color.clear);
+			}
+		}
+		
 		this.hasEyebrows = hasEyebrows;
 		
 		//NORMAL, FIRE/LIGHTNING, WATER, GRASS/GROUND, AND AIR

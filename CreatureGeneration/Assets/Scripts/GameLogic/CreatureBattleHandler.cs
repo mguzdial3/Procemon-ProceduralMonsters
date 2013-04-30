@@ -44,14 +44,20 @@ public class CreatureBattleHandler : MonoBehaviour {
 	private int itsAttackModifier, itsDefenseModifier, itsSpeedModifier, itsSpecialModifier;
 	private float itsAccuracyModifier;
 
-	
+	private Texture2D blackBackground;
 	
 	
 	void Start(){
 		creatureHolder = gameObject.GetComponent<CreatureHolder>();
 		playerCreatureHolder = player.GetComponent<PlayerCreatureHolder>();
 		
+		blackBackground = new Texture2D(100,100);
 		
+		for(int x = 0; x<100; x++){
+			for(int y = 0; y<100; y++){
+				blackBackground.SetPixel(x,y,Color.black);
+			}
+		}
 	}
 	
 	
@@ -99,11 +105,13 @@ public class CreatureBattleHandler : MonoBehaviour {
 			GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height), creatureBattleBackground);
 			
 			//The Creatures
+			GUI.DrawTexture(new Rect(0,0,100,100), blackBackground);
 			GUI.DrawTexture(new Rect(0,0,100,100), myCreature.image);
 			//My info:
 			GUI.TextField(new Rect(0,100,100,30), "Name: "+myCreature.name);
 			GUI.TextField(new Rect(0,130,100,30), "HP: "+myCreature.hitPoints);
 			
+			GUI.DrawTexture(new Rect(Screen.width-100,0,100,100), blackBackground);
 			GUI.DrawTexture(new Rect(Screen.width-100,0,100,100), attackingCreature.image);
 			//Enemy info: 
 			GUI.TextField(new Rect(Screen.width-100,100,100,30), "Name: "+attackingCreature.name);

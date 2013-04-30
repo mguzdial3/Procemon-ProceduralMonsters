@@ -44,10 +44,10 @@ public class LoneCreature : MonoBehaviour {
 	
 	
 	void OnTriggerEnter(Collider other){
-		if(!battlingPlayer){
+		//if(!battlingPlayer){
 			battlingPlayer=true;
 			battleHandler.startBattle(me);
-		}
+		//}
 		
 	}
 }
