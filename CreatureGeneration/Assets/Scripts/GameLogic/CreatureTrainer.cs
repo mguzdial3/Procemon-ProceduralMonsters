@@ -101,10 +101,12 @@ public class CreatureTrainer : MonoBehaviour {
 		
 		testSetup=true;
 		
-		creatures = new CreatureInfo[numOfCreatures];
+		creatures = new CreatureInfo[numOfCreatures+1];
 		int creaturesWeHave =0;
+		
+		
 		while(creaturesWeHave<_numOfCreatures){
-			 
+			
 			CreatureInfo possCreature= creatureHolder.allCreatures[Random.Range(0,creatureHolder.allCreatures.Length)].cloneCreature();
 			
 			if(possCreature.type==_element){
